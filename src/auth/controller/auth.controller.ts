@@ -1,5 +1,5 @@
 import { ChangePasswordDto } from './../dto/changePassword.dto';
-import { Body, Controller, Get, Post, Put, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Post, Put, Req, Res, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginDto } from '../dto/login.dto';
@@ -11,6 +11,7 @@ import { CreateManagerDto } from 'src/manager/dto/create-manager.dto';
 import { CreateAdminDto } from 'src/admin/dto/create-admin.dto';
 
 @Controller('')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
 
     constructor(private readonly authService:AuthService){}
@@ -48,6 +49,7 @@ export class AuthController {
     @Get('login')
     @UsePipes(new ValidationPipe({whitelist:true }))
     login(@Body(new ValidationPipe()) loginData:LoginDto){
+        
         return this.authService.login(loginData);
     }
 

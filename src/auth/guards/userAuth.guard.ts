@@ -14,7 +14,7 @@ export class UserAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean>{
 
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.token;
+    const token = request.headers['token'];
 
     if (!token) {
       throw new UnauthorizedException('You have not passed a token.');
