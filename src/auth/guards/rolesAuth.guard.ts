@@ -19,7 +19,7 @@ export class RolesGuard implements CanActivate {
     //     return true;
 
     //checking if the accessing user has a required role.
-    if(!requiredRoles.includes(user.role))
+    if(requiredRoles!==undefined && !requiredRoles.includes(user.role))
         throw new HttpException(`Account role is not allowed to use this feature`,HttpStatus.FORBIDDEN);
 
     return true;

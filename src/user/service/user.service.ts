@@ -1,20 +1,21 @@
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import dataSource from 'src/db/dbConfig';
 import { UserEntity } from 'src/db/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { ChangePasswordDto } from 'src/auth/dto/changePassword.dto';
+import { PaginationOptions } from 'src/utils/dto/pagination.dto';
+import { HotelEntity } from 'src/db/entities/hotel.entity';
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(UserEntity) private userRepository: Repository<UserEntity>){}
+  constructor(@InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
+  @InjectRepository(HotelEntity)private hotelRepository: Repository<HotelEntity>){}
 
   async changePassword (request:Request, changePasswordDto:ChangePasswordDto){ 
-        
     //deconstructing variables.
     let {oldPassword, newPassword} = changePasswordDto;
 
@@ -38,8 +39,26 @@ export class UserService {
     return 'This action adds a new user';
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAllUsers(paginationOptions:PaginationOptions) {
+
+    const results= await this.userRepository.find({
+      skip:(paginationOptions.page-1)*paginationOptions.limit,  //we use this formula of (pageNo*postsPerPage) to find how many item's we are going to skip.
+      take:paginationOptions.limit
+    });
+
+    const totalItems = await this.userRepository.createQueryBuilder().getCount();
+    return {totalItems,results};
+  }
+
+  async findAllHotels(paginationOptions:PaginationOptions) {
+
+    const results= await this.hotelRepository.find({
+      skip:(paginationOptions.page-1)*paginationOptions.limit,  //we use this formula of (pageNo*postsPerPage) to find how many item's we are going to skip.
+      take:paginationOptions.limit
+    });
+
+    const totalItems = await this.hotelRepository.createQueryBuilder().getCount();
+    return {totalItems,results};
   }
 
   findOne(id: number) {

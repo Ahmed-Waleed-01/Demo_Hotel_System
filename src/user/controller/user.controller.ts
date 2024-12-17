@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Req, ValidationPipe, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Req, ValidationPipe, UseInterceptors, ClassSerializerInterceptor, UsePipes, Query, Res, Header } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
@@ -7,6 +7,7 @@ import { ChangePasswordDto } from 'src/auth/dto/changePassword.dto';
 import { SetRoles } from 'src/auth/decorator/set-role.decorator';
 import { UserRole } from 'src/db/entities/user.entity';
 import { RolesGuard } from 'src/auth/guards/rolesAuth.guard';
+import { PaginationOptions } from 'src/utils/dto/pagination.dto';
 
 @Controller('profile')
 @UseGuards(UserAuthGuard,RolesGuard) //both guards will be used on all of this controller routes.
@@ -18,11 +19,19 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @Get('getUsers')
+  // @UsePipes(new ValidationPipe()) we are using global validation pipes in main.ts
+  showUsers(@Query() paginationOptions:PaginationOptions) {
+
+    return this.userService.findAllUsers(paginationOptions);
   }
 
+  @Get('getHotels')
+  // @UsePipes(new ValidationPipe()) we are using global validation pipes in main.ts
+  showHotels(@Query() paginationOptions:PaginationOptions) {
+
+    return this.userService.findAllHotels(paginationOptions);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
