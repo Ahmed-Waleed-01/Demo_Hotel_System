@@ -16,11 +16,10 @@ export class ManagerController {
   constructor(private readonly managerService: ManagerService,
   private readonly authService: AuthService) {}
 
-
   @Post('addHotel')
   @UsePipes(new ValidationPipe({whitelist:true}))
   addHotel(@Req() req:Request,@Body() createHotelDto: CreateHotelDto) {
-    //using the authService register function to create an account of role register.
+
     return this.managerService.addHotel(req,createHotelDto);
   }
 

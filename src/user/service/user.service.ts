@@ -8,12 +8,18 @@ import { Repository } from 'typeorm';
 import { ChangePasswordDto } from 'src/auth/dto/changePassword.dto';
 import { PaginationOptions } from 'src/utils/dto/pagination.dto';
 import { HotelEntity } from 'src/db/entities/hotel.entity';
+import { PhoneNumberEntity } from 'src/db/entities/phoneNumber.entity';
+import { AttachmentEntity } from 'src/db/entities/attachment.entity';
+import { PhoneNUmberDto } from 'src/manager/dto/phoneNum-dto';
+import { AttachmentDto } from 'src/manager/dto/attachment-dto';
 
 @Injectable()
 export class UserService {
 
   constructor(@InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
-  @InjectRepository(HotelEntity)private hotelRepository: Repository<HotelEntity>){}
+  @InjectRepository(HotelEntity)private hotelRepository: Repository<HotelEntity>,
+  @InjectRepository(PhoneNumberEntity)private readonly phoneNumRepo: Repository<PhoneNumberEntity>,
+  @InjectRepository(AttachmentEntity) private readonly attachmentRepo: Repository<AttachmentEntity>){}
 
   async changePassword (request:Request, changePasswordDto:ChangePasswordDto){ 
     //deconstructing variables.
@@ -52,10 +58,24 @@ export class UserService {
 
   async findAllHotels(paginationOptions:PaginationOptions) {
 
-    const results= await this.hotelRepository.find({
+    //getting hotels.
+    const results = await this.hotelRepository.find({
       skip:(paginationOptions.page-1)*paginationOptions.limit,  //we use this formula of (pageNo*postsPerPage) to find how many item's we are going to skip.
-      take:paginationOptions.limit
+      take:paginationOptions.limit,
     });
+
+    for (let i = 0; i < results.length; i++) {
+      const curHotel = results[i];
+      //getting phoneNumbers that are for the current hotel.
+      const phoneNumbers : PhoneNUmberDto[] = await this.phoneNumRepo.createQueryBuilder("phoneNum").where('phoneNum.hotel_id = :hotelId',{hotelId:curHotel.id}).getMany();
+      //getting attachments that are for the current hotel.
+      const attachments : AttachmentDto[] = await this.attachmentRepo.createQueryBuilder("attach").where('attach.hotel_id = :hotelId',{hotelId:curHotel.id}).getMany();
+
+
+      //attaching new objects to the hotel.
+      curHotel['phoneNumbers'] =phoneNumbers;
+      curHotel['attachments'] = attachments;
+    }
 
     const totalItems = await this.hotelRepository.createQueryBuilder().getCount();
     return {totalItems,results};
