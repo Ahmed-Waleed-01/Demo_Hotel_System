@@ -4,14 +4,19 @@ import { AuthService } from '../service/auth.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginDto } from '../dto/login.dto';
 import { UserAuthGuard } from '../guards/userAuth.guard';
+import { SetRoles } from '../decorator/set-role.decorator';
+import { UserRole } from 'src/db/entities/user.entity';
+import { RolesGuard } from '../guards/rolesAuth.guard';
 
 @Controller('')
 export class AuthController {
 
     constructor(private readonly authService:AuthService){}
 
+    //decorators are executed from bottom to up.
     @Get()
-    @UseGuards(UserAuthGuard)
+    @UseGuards(UserAuthGuard,RolesGuard)
+    @SetRoles(UserRole.USER,UserRole.ADMIN)
     showUsers(){
         return this.authService.getUsers();
     }
