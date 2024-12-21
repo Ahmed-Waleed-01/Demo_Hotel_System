@@ -1,5 +1,5 @@
 import { ChangePasswordDto } from './../dto/changePassword.dto';
-import { Body, Controller, Get, Post, Put, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Post, Put, Req, Res, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginDto } from '../dto/login.dto';
@@ -7,8 +7,11 @@ import { UserAuthGuard } from '../guards/userAuth.guard';
 import { SetRoles } from '../decorator/set-role.decorator';
 import { UserRole } from 'src/db/entities/user.entity';
 import { RolesGuard } from '../guards/rolesAuth.guard';
+import { CreateManagerDto } from 'src/manager/dto/create-manager.dto';
+import { CreateAdminDto } from 'src/admin/dto/create-admin.dto';
 
 @Controller('')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
 
     constructor(private readonly authService:AuthService){}
@@ -27,9 +30,27 @@ export class AuthController {
         return this.authService.register(createUserData);
     }
 
+
+    @Post('manager/register')
+    createManager(@Body() createManagerDto: CreateManagerDto) {
+    //setting the account role to manager.
+    createManagerDto.role=UserRole.ADMIN;
+    //using the authService register function to create an account of role register.
+    return this.authService.register(createManagerDto);
+    }
+
+    @Post('admin/register')
+    createAdmin(@Body() createAdminDto: CreateAdminDto) {
+    //setting the account role to admin.
+    createAdminDto.role=UserRole.ADMIN;
+    //using the authService register function to create an account of role register.
+    return this.authService.register(createAdminDto);
+    }
+
     @Get('login')
     @UsePipes(new ValidationPipe({whitelist:true }))
     login(@Body(new ValidationPipe()) loginData:LoginDto){
+      
         return this.authService.login(loginData);
     }
 

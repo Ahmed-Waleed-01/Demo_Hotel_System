@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Req, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Req, ValidationPipe, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
@@ -40,7 +40,6 @@ export class UserController {
 
   @Put('changePassword')
   @SetRoles(UserRole.USER,UserRole.ADMIN,UserRole.HOTELMANAGER)
-  @UseGuards(UserAuthGuard)
   changePassword(@Req() request:Request,@Body(new ValidationPipe()) changePasswordDto: ChangePasswordDto){
         return this.userService.changePassword(request,changePasswordDto);
   }
