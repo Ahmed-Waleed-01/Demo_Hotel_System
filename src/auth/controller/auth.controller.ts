@@ -30,6 +30,7 @@ export class AuthController {
         return this.authService.register(createUserData);
     }
 
+
     @Post('manager/register')
     createManager(@Body() createManagerDto: CreateManagerDto) {
     //setting the account role to manager.
@@ -49,7 +50,7 @@ export class AuthController {
     @Get('login')
     @UsePipes(new ValidationPipe({whitelist:true }))
     login(@Body(new ValidationPipe()) loginData:LoginDto){
-        
+      
         return this.authService.login(loginData);
     }
 

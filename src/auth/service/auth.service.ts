@@ -1,8 +1,10 @@
+
 import { UserDto } from './../../user/dto/user.dto';
 import { ChangePasswordDto } from './../dto/changePassword.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity, UserRole } from 'src/db/entities/user.entity';
+
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -38,6 +40,7 @@ export class AuthService {
         createUserData.password = await bcrypt.hash(createUserData.password,10);
         
         const newUser = this.userRepository.create(createUserData);
+      
         const userSave = await this.userRepository.save(newUser);
         return userSave;
     }
@@ -62,7 +65,7 @@ export class AuthService {
         const payLoad:JwtLoginPayload = {id:checkUserEmail.id,email:checkUserEmail.email};
         
         const token = this.jwtService.sign(payLoad);
-
+      
         return {checkUserEmail,token};
     }
 
