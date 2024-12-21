@@ -40,6 +40,7 @@ export class UserController {
 
   @Put('changePassword')
   @SetRoles(UserRole.USER,UserRole.ADMIN,UserRole.HOTELMANAGER)
+  @UseGuards(UserAuthGuard)
   changePassword(@Req() request:Request,@Body(new ValidationPipe()) changePasswordDto: ChangePasswordDto){
         return this.userService.changePassword(request,changePasswordDto);
   }
