@@ -1,10 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateAdminDto } from '../dto/create-admin.dto';
-import { UpdateAdminDto } from '../dto/update-admin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HotelEntity, HotelStatus } from 'src/db/entities/hotel.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from 'src/db/entities/user.entity';
+import { UpdateAdminDto } from 'src/dtos/admin/update-admin.dto';
 
 @Injectable()
 export class AdminService {

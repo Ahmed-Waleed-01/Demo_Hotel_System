@@ -1,5 +1,8 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
+import { PhoneNumberEntity } from './phoneNumber.entity';
+import { AttachmentEntity } from './attachment.entity';
+import { AmenitiesEntity } from './amenities.entity';
 
 export enum HotelStatus {
   PENDING = 'PENDING',
@@ -19,17 +22,14 @@ export class HotelEntity {
   @Column({})
   address: string;
 
-  @Column({ unique: true , type:'bigint'})
-  contactNumber: number;
-
   @Column({type:'varchar'})
   email: string;
 
   @Column({type:'varchar'})
   description: string;
 
-  @Column({type:'varchar'})
-  amenities: string;
+  @OneToMany(()=>AmenitiesEntity, (amenity)=>amenity.hotel)
+  amenities: AmenitiesEntity[];
 
   @Column({type:'enum', enum: HotelStatus, default:HotelStatus.PENDING})
   status: HotelStatus
@@ -37,6 +37,12 @@ export class HotelEntity {
   @OneToOne(()=> UserEntity, (manager)=>manager.id, {})
   @JoinColumn({name:'manager_id'})
   manager_id : UserEntity;
+
+  @OneToMany(()=>PhoneNumberEntity, (phoneNumber)=>phoneNumber.hotel)
+  phoneNumbers: PhoneNumberEntity[];
+
+  @OneToMany(()=> AttachmentEntity, (attachment)=>attachment.hotel)
+  attachments: AttachmentEntity[];
 
   @CreateDateColumn()
   created_at: Date;

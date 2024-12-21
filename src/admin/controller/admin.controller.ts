@@ -1,7 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, ParseIntPipe } from '@nestjs/common';
 import { AdminService } from '../service/admin.service';
-import { CreateAdminDto } from '../dto/create-admin.dto';
-import { UpdateAdminDto } from '../dto/update-admin.dto';
 import { UserRole } from 'src/db/entities/user.entity';
 import { SetRoles } from 'src/auth/decorator/set-role.decorator';
 import { UserAuthGuard } from 'src/auth/guards/userAuth.guard';
