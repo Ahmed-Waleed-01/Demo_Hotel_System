@@ -1,9 +1,11 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Length, ValidateNested } from 'class-validator';
-import { CreatePhoneNumberDto } from './create-phoneNum-dto';
+import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Length, ValidateNested } from 'class-validator';
+import { CreatePhoneNumberDto } from '../phoneNumber/create-phoneNum-dto';
 import { Type } from 'class-transformer';
-import { CreateAttachmentDto } from './create-attachment-dto';
+import { CreateAttachmentDto } from '../attachments/create-attachment-dto';
+import { CreateAmenityDto } from '../amenity/create-amenity';
+import { CreateHotelDto } from './create-hotel-dto';
 
-export class CreateHotelDto {
+export class HotelDto extends CreateHotelDto {
   @IsString()
   @Length(3)
   @IsNotEmpty()
@@ -12,10 +14,6 @@ export class CreateHotelDto {
   @IsString()
   @IsNotEmpty()
   address: string;
-
-  // @IsNumber()
-  // @IsNotEmpty()
-  // contactNumber: number;
 
   @IsString()
   @IsEmail()
@@ -26,9 +24,10 @@ export class CreateHotelDto {
   @IsNotEmpty()
   description: string;
 
-  @IsString()
-  @IsNotEmpty()
-  amenities: string;
+  @ValidateNested()
+  @Type(() => CreateAmenityDto)
+  @IsOptional()
+  amenities: CreateAmenityDto[];
 
   // Validate the nested object
   @ValidateNested()

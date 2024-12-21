@@ -8,10 +8,9 @@ export const postgresConnectionOptions: DataSourceOptions={
     password: 'asdfg12345',
     database: 'tasks-db',
     entities: [`${__dirname}/../**/*.entity{.ts,.js}`], // this will automatically load all entity file in the src folder
-    migrations: [`${__dirname}/migrations/*{.ts,.js}`]
+    migrations: [`${__dirname}/migrations/*{.ts,.js}`],
+    synchronize: true,
 
-        
-    // synchronize: true,
     // entities: [`dist/**/*.entity.js`], // this will automatically load all entity file in the src folder
     // migrations: [`dist/db/migrations/*.js`]
 
@@ -25,8 +24,8 @@ export const mysqlConnectionOptions: DataSourceOptions={
     password: 'asdfg12345',
     database: 'tasks-db',
     entities: [`${__dirname}/../**/*.entity{.ts,.js}`], // this will automatically load all entity file in the src folder
-    migrations: [`${__dirname}/migrations/*{.ts,.js}`]
-    // synchronize: true,
+    migrations: [`${__dirname}/migrations/*{.ts,.js}`],
+    synchronize: true,
 }
 
 

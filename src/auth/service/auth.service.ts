@@ -1,14 +1,14 @@
-import { UserDto } from './../../user/dto/user.dto';
-import { ChangePasswordDto } from './../dto/changePassword.dto';
+import { UserDto } from '../../dtos/user/user.dto';
+import { ChangePasswordDto } from '../../dtos/auth/changePassword.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity, UserRole } from 'src/db/entities/user.entity';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from 'src/dtos/user/create-user.dto';
 import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { LoginDto } from '../dto/login.dto';
+import { LoginDto } from '../../dtos/auth/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { JwtLoginPayload } from '../dto/jwtPayload.dto';
+import { JwtLoginPayload } from '../../dtos/auth/jwtPayload.dto';
 
 
 @Injectable()
@@ -41,11 +41,10 @@ export class AuthService {
         const userSave = await this.userRepository.save(newUser);
         return userSave;
     }
-
     
     async login(loginData: LoginDto){
 
-        //lets make all of the email lowercase
+        //lets make all of the email lowercase.
         loginData.email = loginData.email.toLowerCase();
 
         //check if user email is correct.
@@ -63,7 +62,7 @@ export class AuthService {
         
         const token = this.jwtService.sign(payLoad);
 
-        return {checkUserEmail,token};
+        return {"User":checkUserEmail,token};
     }
 
 }

@@ -10,9 +10,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from 'src/utils/jwt/jwt.config';
 import { PhoneNumberEntity } from 'src/db/entities/phoneNumber.entity';
 import { AttachmentEntity } from 'src/db/entities/attachment.entity';
+import { AmenitiesEntity } from 'src/db/entities/amenities.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([UserEntity,HotelEntity,PhoneNumberEntity,AttachmentEntity]),AuthModule, JwtModule.registerAsync({useClass: JwtConfigService})],
+  imports:[TypeOrmModule.forFeature([UserEntity,HotelEntity,PhoneNumberEntity,AttachmentEntity,AmenitiesEntity]),AuthModule, JwtModule.registerAsync({useClass: JwtConfigService})],
   controllers: [ManagerController],
   providers: [ManagerService,AuthService],
 })

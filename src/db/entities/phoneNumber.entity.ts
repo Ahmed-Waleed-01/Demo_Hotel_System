@@ -10,7 +10,7 @@ export enum PhoneNumType {
 export class  PhoneNumberEntity{
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id?: number;
 
     //setting up foreign key for hotel entity inside of phone number entity. 
     @ManyToOne(()=>HotelEntity, (hotel)=>hotel.id,{onDelete:"CASCADE"})
@@ -22,4 +22,5 @@ export class  PhoneNumberEntity{
 
     @Column({ unique: true })
     phone_number: string;
+    
 }

@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, Prim
 import { UserEntity } from './user.entity';
 import { PhoneNumberEntity } from './phoneNumber.entity';
 import { AttachmentEntity } from './attachment.entity';
+import { AmenitiesEntity } from './amenities.entity';
 
 export enum HotelStatus {
   PENDING = 'PENDING',
@@ -21,17 +22,14 @@ export class HotelEntity {
   @Column({})
   address: string;
 
-  // @Column({ unique: true , type:'bigint'})
-  // contactNumber: number;
-
   @Column({type:'varchar'})
   email: string;
 
   @Column({type:'varchar'})
   description: string;
 
-  @Column({type:'varchar'})
-  amenities: string;
+  @OneToMany(()=>AmenitiesEntity, (amenity)=>amenity.hotel)
+  amenities: AmenitiesEntity[];
 
   @Column({type:'enum', enum: HotelStatus, default:HotelStatus.PENDING})
   status: HotelStatus
