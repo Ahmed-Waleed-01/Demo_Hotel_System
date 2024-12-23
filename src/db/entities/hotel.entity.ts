@@ -3,6 +3,7 @@ import { UserEntity } from './user.entity';
 import { PhoneNumberEntity } from './phoneNumber.entity';
 import { AttachmentEntity } from './attachment.entity';
 import { AmenitiesEntity } from './amenities.entity';
+import { BaseEntity } from './base-entity';
 
 export enum HotelStatus {
   PENDING = 'PENDING',
@@ -11,10 +12,7 @@ export enum HotelStatus {
 }
 
 @Entity('hotels')
-export class HotelEntity {
-
-  @PrimaryGeneratedColumn()
-  id: number;
+export class HotelEntity extends BaseEntity {
 
   @Column({unique:true})
   name: string;
@@ -22,7 +20,7 @@ export class HotelEntity {
   @Column({})
   address: string;
 
-  @Column({type:'varchar'})
+  @Column({type:'varchar', unique:true})
   email: string;
 
   @Column({type:'varchar'})
@@ -44,7 +42,10 @@ export class HotelEntity {
   @OneToMany(()=> AttachmentEntity, (attachment)=>attachment.hotel)
   attachments: AttachmentEntity[];
 
-  @CreateDateColumn()
-  created_at: Date;
+  // @PrimaryGeneratedColumn()
+  // id: number;
+
+  // @CreateDateColumn()
+  // created_at: Date;
 
 }

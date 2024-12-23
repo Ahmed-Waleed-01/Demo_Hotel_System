@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from './base-entity';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -8,10 +9,7 @@ export enum UserRole {
 }
 
 @Entity('users')
-export class UserEntity {
-
-  @PrimaryGeneratedColumn()
-  id: number;
+export class UserEntity extends BaseEntity {
 
   @Column({ nullable: true})
   first_name: string;
@@ -29,7 +27,9 @@ export class UserEntity {
   @Column({type:'enum', enum: UserRole, default:UserRole.USER})
   role: UserRole
 
-  @CreateDateColumn()
-  created_at: Date;
+  // @PrimaryGeneratedColumn()
+  // id: number;
 
+  // @CreateDateColumn()
+  // created_at: Date;
 }

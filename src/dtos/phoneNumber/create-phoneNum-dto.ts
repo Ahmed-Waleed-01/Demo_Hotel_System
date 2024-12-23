@@ -8,7 +8,6 @@ export class CreatePhoneNumberDto extends BaseDto {
   type: PhoneNumType;
 
   @IsString()
-  @IsPositive()
   phone_number: string;
 
 }

@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { HotelEntity } from "./hotel.entity";
+import { BaseEntity } from "./base-entity";
 
 export enum PhoneNumType {
     LANDLINE = 'LANDLINE',
@@ -7,10 +8,7 @@ export enum PhoneNumType {
 }
 
 @Entity("phone_numbers")
-export class  PhoneNumberEntity{
-
-    @PrimaryGeneratedColumn()
-    id?: number;
+export class  PhoneNumberEntity extends BaseEntity{
 
     //setting up foreign key for hotel entity inside of phone number entity. 
     @ManyToOne(()=>HotelEntity, (hotel)=>hotel.id,{onDelete:"CASCADE"})

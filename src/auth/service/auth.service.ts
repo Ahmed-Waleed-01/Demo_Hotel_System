@@ -4,7 +4,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity, UserRole } from 'src/db/entities/user.entity';
 import { CreateUserDto } from 'src/dtos/user/create-user.dto';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from '../../dtos/auth/login.dto';
 import { JwtService } from '@nestjs/jwt';
