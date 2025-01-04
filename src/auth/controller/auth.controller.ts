@@ -5,10 +5,10 @@ import { CreateUserDto } from 'src/dtos/user/create-user.dto';
 import { LoginDto } from '../../dtos/auth/login.dto';
 import { UserAuthGuard } from '../guards/userAuth.guard';
 import { SetRoles } from '../decorator/set-role.decorator';
-import { UserRole } from 'src/db/entities/user.entity';
 import { RolesGuard } from '../guards/rolesAuth.guard';
 import { CreateManagerDto } from 'src/dtos/manager/create-manager.dto';
 import { CreateAdminDto } from 'src/dtos/admin/create-admin.dto';
+import { UserRole } from 'src/enums/user-enum';
 
 @Controller('')
 @UseInterceptors(ClassSerializerInterceptor)

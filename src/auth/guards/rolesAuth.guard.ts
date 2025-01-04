@@ -1,8 +1,8 @@
 
 import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from 'src/db/entities/user.entity';
 import { ROLES_KEY } from '../decorator/set-role.decorator';
+import { UserRole } from 'src/enums/user-enum';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -13,7 +13,7 @@ export class RolesGuard implements CanActivate {
     const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [context.getHandler(),context.getClass()]);
 
     const { user } = context.switchToHttp().getRequest();
-
+    console.log(requiredRoles);
     // //if no roles were passed then we allow any role to pass.
     // if(!requiredRoles)
     //     return true;

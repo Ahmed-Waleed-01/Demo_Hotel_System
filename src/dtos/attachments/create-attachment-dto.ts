@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Length } from 'class-validator';
-import { AttachmentType } from 'src/db/entities/attachment.entity';
+import { AttachmentType } from 'src/enums/attachments-enum';
 
 export class CreateAttachmentDto {
 

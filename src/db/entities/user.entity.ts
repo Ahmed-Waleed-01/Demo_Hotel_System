@@ -1,12 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from './base-entity';
-
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  HOTELMANAGER = 'HOTELMANAGER',
-  USER = 'USER',
-}
+import { UserRole } from 'src/enums/user-enum';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -27,9 +22,4 @@ export class UserEntity extends BaseEntity {
   @Column({type:'enum', enum: UserRole, default:UserRole.USER})
   role: UserRole
 
-  // @PrimaryGeneratedColumn()
-  // id: number;
-
-  // @CreateDateColumn()
-  // created_at: Date;
 }

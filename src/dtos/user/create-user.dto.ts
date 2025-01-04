@@ -1,6 +1,6 @@
 import { IsEmail, IsEnum, IsOptional, IsString, Length} from "class-validator";
-import { UserRole } from "src/db/entities/user.entity";
 import { BaseDto } from "../Shared/base-dto";
+import { UserRole } from "src/enums/user-enum";
 
 
 export class CreateUserDto extends BaseDto{
