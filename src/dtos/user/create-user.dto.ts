@@ -1,9 +1,9 @@
 import { IsEmail, IsEnum, IsOptional, IsString, Length} from "class-validator";
 import { UserRole } from "src/db/entities/user.entity";
+import { BaseDto } from "../Shared/base-dto";
 
 
-export class BaseUserDto {
-
+export class CreateUserDto extends BaseDto{
     @IsString()
     @Length(2,15)
     @IsOptional()
@@ -26,5 +26,4 @@ export class BaseUserDto {
     @IsEnum(UserRole)
     @IsOptional()
     role: UserRole = UserRole.USER;
-
 }
