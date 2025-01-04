@@ -1,3 +1,4 @@
+import { UserDto } from './../../dtos/user/user.dto';
 import { UpdateUserDto } from '../../dtos/user/update-user.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +11,7 @@ import { PaginationOptions } from 'src/dtos/utils/pagination.dto';
 import { HotelEntity } from 'src/db/entities/hotel.entity';
 import { PhoneNumberEntity } from 'src/db/entities/phoneNumber.entity';
 import { AttachmentEntity } from 'src/db/entities/attachment.entity';
+import { HotelDto } from 'src/dtos/hotel/hotel-dto';
 
 @Injectable()
 export class UserService {
@@ -45,26 +47,33 @@ export class UserService {
 
   async findAllUsers(paginationOptions:PaginationOptions) {
 
-    const results= await this.userRepository.find({
-      skip:(paginationOptions.page-1)*paginationOptions.limit,  //we use this formula of (pageNo*postsPerPage) to find how many item's we are going to skip.
-      take:paginationOptions.limit
-    });
+    //*******************old and inefficent way of applying pagination *****************/
+    // const results= await this.userRepository.find({
+    //   skip:(paginationOptions.page-1)*paginationOptions.size,  
+    //   take:paginationOptions.size
+    // });
+    // const totalItems = await this.userRepository.createQueryBuilder().getCount();
 
-    const totalItems = await this.userRepository.createQueryBuilder().getCount();
-    return {totalItems,results};
+    //this new way returns paginatied results using createQueryBuilder Method and count of items in that table.
+    const [users,totalCount] = await this.userRepository.createQueryBuilder()
+    .take(paginationOptions.size)
+    .skip((paginationOptions.page-1)*paginationOptions.size)
+    .orderBy(paginationOptions.sortBy,paginationOptions.sort)
+    .getManyAndCount();
+
+    return {totalCount, users};
   }
 
   async findAllHotels(paginationOptions:PaginationOptions) {
 
     //getting hotels.
-    const results = await this.hotelRepository.find({
-      skip:(paginationOptions.page-1)*paginationOptions.limit,  //we use this formula of (pageNo*postsPerPage) to find how many item's we are going to skip.
-      take:paginationOptions.limit,
-      relations:['amenities','phoneNumbers','attachments']
-    });
+    const [hotels,totalCount] = await this.hotelRepository.createQueryBuilder()
+    .take(paginationOptions.size)
+    .skip((paginationOptions.page-1)*paginationOptions.size) //we use this formula of (pageNo*postsPerPage) to find how many item's we are going to skip.
+    .orderBy(paginationOptions.sortBy,paginationOptions.sort)
+    .getManyAndCount();
 
-    const totalItems = await this.hotelRepository.createQueryBuilder().getCount();
-    return {totalItems,results};
+    return {totalCount,hotels};
   }
 
   findOne(id: number) {

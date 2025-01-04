@@ -2,7 +2,7 @@ import { UserDto } from '../../dtos/user/user.dto';
 import { ChangePasswordDto } from '../../dtos/auth/changePassword.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity, UserRole } from 'src/db/entities/user.entity';
+import { UserEntity} from 'src/db/entities/user.entity';
 import { CreateUserDto } from 'src/dtos/user/create-user.dto';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';

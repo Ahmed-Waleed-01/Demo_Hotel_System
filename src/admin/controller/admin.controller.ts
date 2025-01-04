@@ -1,10 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, ParseIntPipe } from '@nestjs/common';
 import { AdminService } from '../service/admin.service';
-import { UserRole } from 'src/db/entities/user.entity';
 import { SetRoles } from 'src/auth/decorator/set-role.decorator';
 import { UserAuthGuard } from 'src/auth/guards/userAuth.guard';
 import { RolesGuard } from 'src/auth/guards/rolesAuth.guard';
-import { HotelStatus } from 'src/db/entities/hotel.entity';
+import { UserRole } from 'src/enums/user-enum';
+import { HotelStatus } from 'src/enums/hotels-enum';
+
 
 @Controller('admin')
 @SetRoles(UserRole.ADMIN)

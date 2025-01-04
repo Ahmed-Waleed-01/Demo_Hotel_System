@@ -1,11 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { HotelEntity } from "./hotel.entity";
 import { BaseEntity } from "./base-entity";
-
-export enum PhoneNumType {
-    LANDLINE = 'LANDLINE',
-    MOBILE = 'MOBILE',
-}
+import { PhoneNumType } from "src/enums/phoneNum-enum";
 
 @Entity("phone_numbers")
 export class  PhoneNumberEntity extends BaseEntity{

@@ -2,16 +2,8 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColu
 import { HotelEntity } from "./hotel.entity";
 import { BaseEntity } from "./base-entity";
 
-export enum AttachmentType {
-    IMAGE = 'IMAGE',
-    FILE = 'FILE',
-}
-
 @Entity("amenities")
 export class  AmenitiesEntity extends BaseEntity{
-
-    // @PrimaryGeneratedColumn()
-    // id: number;
 
     //setting up foreign key for hotel entity inside of amenities entity. 
     @ManyToOne(()=>HotelEntity, (hotel)=>hotel.id,{onDelete:"CASCADE"}) //when the main entity which is the hotel is delted the attachment is deleted.

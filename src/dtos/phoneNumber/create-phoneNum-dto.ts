@@ -1,6 +1,6 @@
 import { IsEnum, IsPositive, IsString } from 'class-validator';
-import { PhoneNumType } from 'src/db/entities/phoneNumber.entity';
 import { BaseDto } from '../Shared/base-dto';
+import { PhoneNumType } from 'src/enums/phoneNum-enum';
 
 export class CreatePhoneNumberDto extends BaseDto {
   

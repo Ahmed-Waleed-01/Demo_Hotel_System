@@ -4,12 +4,7 @@ import { PhoneNumberEntity } from './phoneNumber.entity';
 import { AttachmentEntity } from './attachment.entity';
 import { AmenitiesEntity } from './amenities.entity';
 import { BaseEntity } from './base-entity';
-
-export enum HotelStatus {
-  PENDING = 'PENDING',
-  ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-}
+import { HotelStatus } from 'src/enums/hotels-enum';
 
 @Entity('hotels')
 export class HotelEntity extends BaseEntity {
@@ -41,11 +36,5 @@ export class HotelEntity extends BaseEntity {
 
   @OneToMany(()=> AttachmentEntity, (attachment)=>attachment.hotel)
   attachments: AttachmentEntity[];
-
-  // @PrimaryGeneratedColumn()
-  // id: number;
-
-  // @CreateDateColumn()
-  // created_at: Date;
 
 }

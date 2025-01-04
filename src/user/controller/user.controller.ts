@@ -5,9 +5,9 @@ import { UpdateUserDto } from '../../dtos/user/update-user.dto';
 import { UserAuthGuard } from 'src/auth/guards/userAuth.guard';
 import { ChangePasswordDto } from 'src/dtos/auth/changePassword.dto';
 import { SetRoles } from 'src/auth/decorator/set-role.decorator';
-import { UserRole } from 'src/db/entities/user.entity';
 import { RolesGuard } from 'src/auth/guards/rolesAuth.guard';
 import { PaginationOptions } from 'src/dtos/utils/pagination.dto';
+import { UserRole } from 'src/enums/user-enum';
 
 @Controller('profile')
 @UseGuards(UserAuthGuard,RolesGuard) //both guards will be used on all of this controller routes.
