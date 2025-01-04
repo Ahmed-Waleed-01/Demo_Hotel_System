@@ -1,10 +1,9 @@
 import { Transform } from "class-transformer";
 import { IsEnum, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { SortOptions } from "src/enums/sort-options-enum";
+import { SortByOptions } from "src/enums/sortBy-options-enum";
 
-export enum SortOptions {
-    asc = 'ASC',
-    desc = 'DESC'
-}
+
 
 export class PaginationOptions {
 
@@ -30,9 +29,9 @@ export class PaginationOptions {
     
     //*******there could be a problem if the user enters an attribute that does not exist.********/
     //sort by which attribute.
-    @IsString()
+    @IsEnum(SortByOptions)
     @IsOptional()
-    sortBy: string = "id";
+    sortBy: string = SortByOptions.ID;
 }
 
 

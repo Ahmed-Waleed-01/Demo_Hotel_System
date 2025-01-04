@@ -55,26 +55,24 @@ export class UserService {
     // const totalItems = await this.userRepository.createQueryBuilder().getCount();
 
     //this new way returns paginatied results using createQueryBuilder Method and count of items in that table.
-    const result = await this.userRepository.createQueryBuilder()
+    const [users,totalCount] = await this.userRepository.createQueryBuilder()
     .take(paginationOptions.size)
     .skip((paginationOptions.page-1)*paginationOptions.size)
     .orderBy(paginationOptions.sortBy,paginationOptions.sort)
     .getManyAndCount();
 
-    const users:UserDto[] = result[0] ??[] , totalCount= result[1];
     return {totalCount, users};
   }
 
   async findAllHotels(paginationOptions:PaginationOptions) {
 
     //getting hotels.
-    const result = await this.hotelRepository.createQueryBuilder()
+    const [hotels,totalCount] = await this.hotelRepository.createQueryBuilder()
     .take(paginationOptions.size)
     .skip((paginationOptions.page-1)*paginationOptions.size) //we use this formula of (pageNo*postsPerPage) to find how many item's we are going to skip.
     .orderBy(paginationOptions.sortBy,paginationOptions.sort)
     .getManyAndCount();
 
-    const hotels:HotelDto[] = result[0]?? [], totalCount = result[1];
     return {totalCount,hotels};
   }
 

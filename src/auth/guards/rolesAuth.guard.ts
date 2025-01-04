@@ -13,7 +13,6 @@ export class RolesGuard implements CanActivate {
     const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [context.getHandler(),context.getClass()]);
 
     const { user } = context.switchToHttp().getRequest();
-    console.log(requiredRoles);
     // //if no roles were passed then we allow any role to pass.
     // if(!requiredRoles)
     //     return true;
