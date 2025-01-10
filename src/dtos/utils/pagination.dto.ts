@@ -1,7 +1,5 @@
 import { Transform } from "class-transformer";
 import { IsEnum, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
-import { SortOptions } from "src/enums/sort-options-enum";
-import { SortByOptions } from "src/enums/sortBy-options-enum";
 
 
 
@@ -20,18 +18,6 @@ export class PaginationOptions {
     @IsPositive()
     @IsOptional()
     page: number = 1;
-    
-    //ascending or descending order.
-    @Transform(({value}) => value.toUpperCase())
-    @IsEnum(SortOptions)
-    @IsOptional()
-    sort: SortOptions = SortOptions.asc;
-    
-    //*******there could be a problem if the user enters an attribute that does not exist.********/
-    //sort by which attribute.
-    @IsEnum(SortByOptions)
-    @IsOptional()
-    sortBy: string = SortByOptions.ID;
 }
 
 

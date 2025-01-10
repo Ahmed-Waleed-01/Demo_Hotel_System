@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from '../../dtos/auth/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtLoginPayload } from '../../dtos/auth/jwtPayload.dto';
+import { Response } from 'express';
 
 
 @Injectable()
@@ -43,7 +44,7 @@ export class AuthService {
         return userSave;
     }
     
-    async login(loginData: LoginDto){
+    async login(res:Response, loginData: LoginDto){
 
         //lets make all of the email lowercase.
         loginData.email = loginData.email.toLowerCase();
@@ -60,10 +61,16 @@ export class AuthService {
 
         //creating a payload that will be encrypted into the token.
         const payLoad:JwtLoginPayload = {id:checkUserEmail.id,email:checkUserEmail.email};
-        
         const token = this.jwtService.sign(payLoad);
-
-        return {"User":checkUserEmail,token};
+        
+        //setting and returning the token inside the resposnse headers.
+        try {
+            res.setHeader("Token",token);
+            res.json({"User":checkUserEmail})
+            
+        } catch (error) {
+           throw new HttpException(`Error : ${error}`, HttpStatus.AMBIGUOUS); 
+        }
     }
 
 }

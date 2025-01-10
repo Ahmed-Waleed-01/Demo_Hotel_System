@@ -8,6 +8,9 @@ import { SetRoles } from 'src/auth/decorator/set-role.decorator';
 import { RolesGuard } from 'src/auth/guards/rolesAuth.guard';
 import { PaginationOptions } from 'src/dtos/utils/pagination.dto';
 import { UserRole } from 'src/enums/user-enum';
+import { SortingOptions } from 'src/dtos/utils/sorting.dto';
+import { UserFilterOptions } from 'src/dtos/filters/userFilters-dto';
+import { HotelFilterOptions } from 'src/dtos/filters/hotelFilters-dto';
 
 @Controller('profile')
 @UseGuards(UserAuthGuard,RolesGuard) //both guards will be used on all of this controller routes.
@@ -21,16 +24,16 @@ export class UserController {
 
   @Get('getUsers')
   // @UsePipes(new ValidationPipe()) we are using global validation pipes in main.ts
-  showUsers(@Query() paginationOptions:PaginationOptions) {
+  showUsers(@Query()sortingOptions:SortingOptions, @Query() paginationOptions:PaginationOptions, @Query() userFilterOptions:UserFilterOptions) {
 
-    return this.userService.findAllUsers(paginationOptions);
+    return this.userService.findAllUsers(paginationOptions,sortingOptions,userFilterOptions);
   }
 
   @Get('getHotels')
   // @UsePipes(new ValidationPipe()) we are using global validation pipes in main.ts
-  showHotels(@Query() paginationOptions:PaginationOptions) {
+  showHotels(@Query()sortingOptions:SortingOptions, @Query() paginationOptions:PaginationOptions, @Query() hotelFilterOptions:HotelFilterOptions) {
 
-    return this.userService.findAllHotels(paginationOptions);
+    return this.userService.findAllHotels(paginationOptions,sortingOptions,hotelFilterOptions);
   }
   
   @Get(':id')
