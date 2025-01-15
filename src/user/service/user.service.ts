@@ -1,3 +1,5 @@
+import { HotelFilterOptions } from './../../dtos/filters/hotelFilters-dto';
+import { UserFilterOptions } from './../../dtos/filters/userFilters-dto';
 import { UserDto } from './../../dtos/user/user.dto';
 import { UpdateUserDto } from '../../dtos/user/update-user.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -12,6 +14,7 @@ import { HotelEntity } from 'src/db/entities/hotel.entity';
 import { PhoneNumberEntity } from 'src/db/entities/phoneNumber.entity';
 import { AttachmentEntity } from 'src/db/entities/attachment.entity';
 import { HotelDto } from 'src/dtos/hotel/hotel-dto';
+import { SortingOptions } from 'src/dtos/utils/sorting.dto';
 
 @Injectable()
 export class UserService {
@@ -45,33 +48,58 @@ export class UserService {
     return 'This action adds a new user';
   }
 
-  async findAllUsers(paginationOptions:PaginationOptions) {
-
-    //*******************old and inefficent way of applying pagination *****************/
-    // const results= await this.userRepository.find({
-    //   skip:(paginationOptions.page-1)*paginationOptions.size,  
-    //   take:paginationOptions.size
-    // });
-    // const totalItems = await this.userRepository.createQueryBuilder().getCount();
+  async findAllUsers(paginationOptions:PaginationOptions, sortingOptions:SortingOptions, userFilterOptions:UserFilterOptions) {
 
     //this new way returns paginatied results using createQueryBuilder Method and count of items in that table.
-    const [users,totalCount] = await this.userRepository.createQueryBuilder()
+    const query = this.userRepository.createQueryBuilder("users")
     .take(paginationOptions.size)
     .skip((paginationOptions.page-1)*paginationOptions.size)
-    .orderBy(paginationOptions.sortBy,paginationOptions.sort)
-    .getManyAndCount();
+    .orderBy(sortingOptions.sortBy,sortingOptions.order);
+    
+    //setting up filter logic but it should be encapsulated else where.
+    if(userFilterOptions.email)
+      query.andWhere('users.email ILIKE :email', { email: `%${userFilterOptions.email}%` }); // ILIKE for case-insensitive
+
+    if(userFilterOptions.first_name)
+      query.andWhere('users.first_name ILIKE :first_name', { first_name: `%${userFilterOptions.first_name}%` }); // ILIKE for case-insensitive
+
+    if(userFilterOptions.last_name)
+      query.andWhere('users.last_name ILIKE :last_name', { last_name: `%${userFilterOptions.last_name}%` });
+
+    if(userFilterOptions.id)
+      query.andWhere('users.id = :id', { id: userFilterOptions.id });
+
+    if(userFilterOptions.role)
+      query.andWhere('users.role = :role', { role: userFilterOptions.role });
+    
+    //getting final results and saving them.
+    const [users,totalCount] = await query.getManyAndCount();
 
     return {totalCount, users};
   }
 
-  async findAllHotels(paginationOptions:PaginationOptions) {
+  async findAllHotels(paginationOptions:PaginationOptions, sortingOptions:SortingOptions, hotelFilterOptions:HotelFilterOptions) {
 
-    //getting hotels.
-    const [hotels,totalCount] = await this.hotelRepository.createQueryBuilder()
+    //getting hotels and applying pagination and sorting.
+    const query = this.hotelRepository.createQueryBuilder("hotels")
     .take(paginationOptions.size)
     .skip((paginationOptions.page-1)*paginationOptions.size) //we use this formula of (pageNo*postsPerPage) to find how many item's we are going to skip.
-    .orderBy(paginationOptions.sortBy,paginationOptions.sort)
-    .getManyAndCount();
+    .orderBy(sortingOptions.sortBy,sortingOptions.order)
+    
+    //applying filter logic.
+    if(hotelFilterOptions.id)
+      query.andWhere('hotels.id = :id', {id: hotelFilterOptions.id});
+
+    if(hotelFilterOptions.email)
+      query.andWhere('hotels.email ILIKE :email', {email: `%${hotelFilterOptions.email}%`}); // ILIKE for case-insensitive
+
+    if(hotelFilterOptions.name)
+      query.andWhere('hotels.name ILIKE :name', {name: `%${hotelFilterOptions.name}%`});
+
+    if(hotelFilterOptions.status)
+      query.andWhere('hotels.status = :status', {status: hotelFilterOptions.status});
+
+    const [hotels,totalCount] = await query.getManyAndCount();
 
     return {totalCount,hotels};
   }

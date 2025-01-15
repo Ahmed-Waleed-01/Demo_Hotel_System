@@ -9,6 +9,7 @@ import { RolesGuard } from '../guards/rolesAuth.guard';
 import { CreateManagerDto } from 'src/dtos/manager/create-manager.dto';
 import { CreateAdminDto } from 'src/dtos/admin/create-admin.dto';
 import { UserRole } from 'src/enums/user-enum';
+import { Response } from 'express';
 
 @Controller('')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -49,9 +50,9 @@ export class AuthController {
 
     @Get('login')
     @UsePipes(new ValidationPipe({whitelist:true }))
-    login(@Body(new ValidationPipe()) loginData:LoginDto){
+    login(@Res() res:Response,@Body(new ValidationPipe()) loginData:LoginDto){
       
-        return this.authService.login(loginData);
+        return this.authService.login(res,loginData);
     }
 
 }
