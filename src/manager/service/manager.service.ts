@@ -1,3 +1,4 @@
+import { CloudinaryService } from './../../utils/cloudinary/cloudinary.service';
 import { CreateHotelDto } from '../../dtos/hotel/create-hotel-dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateManagerDto } from '../../dtos/manager/create-manager.dto';
@@ -14,15 +15,19 @@ import { PhoneNUmberDto } from '../../dtos/phoneNumber/phoneNum-dto';
 import { AmenityDto } from 'src/dtos/amenity/amenity-dto';
 import { CreateAmenityDto } from 'src/dtos/amenity/create-amenity';
 import { AmenitiesEntity } from 'src/db/entities/amenities.entity';
+import { CreateAttachmentDto } from 'src/dtos/attachments/create-attachment-dto';
+import { AttachmentType } from 'src/enums/attachments-enum';
 
 
 @Injectable()
 export class ManagerService {
+  
 
   constructor(@InjectRepository(HotelEntity) private readonly hotelRepo: Repository<HotelEntity>,
 @InjectRepository(PhoneNumberEntity)private readonly phoneNumRepo: Repository<PhoneNumberEntity>,
 @InjectRepository(AttachmentEntity) private readonly attachmentRepo: Repository<AttachmentEntity>,
-@InjectRepository(AmenitiesEntity) private readonly amenitiesRepo: Repository<AmenitiesEntity>){}
+@InjectRepository(AmenitiesEntity) private readonly amenitiesRepo: Repository<AmenitiesEntity>,
+private readonly cloudinaryService:CloudinaryService){}
 
   async addHotel(req:Request ,createHotelDto: CreateHotelDto) {
     const manager = req['user'];
@@ -44,12 +49,19 @@ export class ManagerService {
    }
 
    //checking if there is a hotel with the same name or a hotel with the same contact number.
+   checkHotel = await this.hotelRepo.findOne({where:{email:createHotelDto.email}});
+   if(checkHotel !== null)
+    throw new HttpException("A hotel with the same email already exists",HttpStatus.CONFLICT);
+
+   //checking if there is a hotel with the same name or a hotel with the same contact number.
    checkHotel = await this.hotelRepo.findOne({where:{name:createHotelDto.name}});
    if(checkHotel !== null)
     throw new HttpException("A hotel with the same name already exists",HttpStatus.CONFLICT);
 
    //saving the hotel into the database
    let newHotel = this.hotelRepo.create({...createHotelDto,manager_id:manager});
+   //intializing attachments in new hotel
+   newHotel.attachments = [];
    newHotel = await this.hotelRepo.save(newHotel);
 
    //saving the amenities in the amenities table and adding the hotel fk.
@@ -65,15 +77,25 @@ export class ManagerService {
     const newPhone = this.phoneNumRepo.create({...curPhone,hotel:newHotel});
     this.phoneNumRepo.save(newPhone)
    }
-   
-   //saving the attachments in the attachments table and adding the hotel fk.
-   for (let i = 0; i < createHotelDto.attachments.length; i++) {
-    const curAttachment = createHotelDto.attachments[i];
-    const newAttach = this.attachmentRepo.create({...curAttachment,hotel:newHotel});
-    this.attachmentRepo.save(newAttach);
-   }
-   
+
     return newHotel;
   }
 
+  async addImgToHotel(req:Request, image:Express.Multer.File) {
+    const manager = req['user'];
+
+    //getting hotel that is asocciated to the manager and using leftJoinAndSelect  
+    let checkHotel= await this.hotelRepo.createQueryBuilder("hotel").leftJoinAndSelect('hotel.attachments', 'attachments').where('hotel.manager_id = :managerId',{managerId:manager.id}).getOne();
+    if(checkHotel === null || checkHotel === undefined)
+      throw new HttpException("manager does not have a hotel",HttpStatus.CONFLICT);
+
+    //uploading the image into cloudinary.
+    const uploadedImg = await this.cloudinaryService.uploadFile(image);
+    
+    //creating an attachment and saving it.
+    const attachment =this.attachmentRepo.create({attachment_url: uploadedImg.secure_url, type:AttachmentType.IMAGE,hotel:checkHotel});
+    await this.attachmentRepo.save(attachment);
+
+    return checkHotel;
+  }
 }

@@ -1,6 +1,5 @@
 import { HotelFilterOptions } from './../../dtos/filters/hotelFilters-dto';
 import { UserFilterOptions } from './../../dtos/filters/userFilters-dto';
-import { UserDto } from './../../dtos/user/user.dto';
 import { UpdateUserDto } from '../../dtos/user/update-user.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +12,6 @@ import { PaginationOptions } from 'src/dtos/utils/pagination.dto';
 import { HotelEntity } from 'src/db/entities/hotel.entity';
 import { PhoneNumberEntity } from 'src/db/entities/phoneNumber.entity';
 import { AttachmentEntity } from 'src/db/entities/attachment.entity';
-import { HotelDto } from 'src/dtos/hotel/hotel-dto';
 import { SortingOptions } from 'src/dtos/utils/sorting.dto';
 
 @Injectable()

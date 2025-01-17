@@ -11,9 +11,10 @@ import { JwtConfigService } from 'src/utils/jwt/jwt.config';
 import { PhoneNumberEntity } from 'src/db/entities/phoneNumber.entity';
 import { AttachmentEntity } from 'src/db/entities/attachment.entity';
 import { AmenitiesEntity } from 'src/db/entities/amenities.entity';
+import { CloudinaryModule } from 'src/utils/cloudinary/cloudinary.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([UserEntity,HotelEntity,PhoneNumberEntity,AttachmentEntity,AmenitiesEntity]),AuthModule, JwtModule.registerAsync({useClass: JwtConfigService})],
+  imports:[TypeOrmModule.forFeature([UserEntity,HotelEntity,PhoneNumberEntity,AttachmentEntity,AmenitiesEntity]),AuthModule, JwtModule.registerAsync({useClass: JwtConfigService}), CloudinaryModule],
   controllers: [ManagerController],
   providers: [ManagerService,AuthService],
 })
